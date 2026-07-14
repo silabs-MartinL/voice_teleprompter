@@ -2,115 +2,126 @@
 
 Voice Teleprompter is a browser-based teleprompter that follows your speech instead of scrolling at a fixed speed.
 
-It was designed for recording technical videos where natural pauses, demonstrations, and retakes are common. Unlike traditional teleprompters, it waits for you to continue speaking and automatically tracks your progress through the script.
+Unlike traditional teleprompters, it waits for you to speak before advancing through the script, allowing you to pause naturally while recording videos, demonstrating products, or presenting technical content.
 
-The entire application is contained in a single HTML file and runs locally in a modern browser such as Google Chrome. No installation, accounts, subscriptions, or internet connection are required after the page has been loaded.
+The entire application is contained in a single HTML file and runs locally in a modern browser. No installation, server or subscription is required.
 
 ## Features
 
-- Voice-controlled teleprompter using the Web Speech API
-- Automatically follows your speech
-- No scrolling timers or countdowns
-- Hands-free "Hey reset" voice command
-- Open plain text (.txt) scripts
-- Built-in script editor
-- Download edited scripts
-- Remembers the last script automatically
-- Adjustable font size
-- Fullscreen mode
-- Auto-hiding toolbar
-- Script statistics and estimated reading time
-- Optional-word highlighting to improve recognition of technical scripts
+### Voice-controlled scrolling
 
-## How it works
+- Follows your speech automatically
+- No scrolling timers
+- Pause naturally without losing your place
+- Hands-free reset using the voice command **"Hey reset"**
 
-Rather than trying to perform perfect speech-to-text transcription, Voice Teleprompter tracks your position through the script.
+### Intelligent speech tracking
+
+Rather than attempting perfect speech-to-text transcription, Voice Teleprompter tracks your position through the script using a lightweight recognition engine.
 
 Words are divided into two categories:
 
-### Required words (white)
+- **Required words** (white)
+- **Optional words** (cyan)
 
-These are the important words that the recognizer uses to determine your current position in the script.
+This makes the teleprompter much more tolerant of technical terminology, acronyms, product names and common filler words.
 
-### Optional words (cyan)
+## Eye Contact Mode
 
-Optional words can be skipped if the recognizer successfully hears the following required word.
+Eye Contact Mode creates an adjustable horizontal reading gap so the next lines of text appear immediately above your webcam if positioned in front of your screen within the reading gap.
 
-Optional words include:
+This helps maintain natural eye contact while reading the script, making recordings look much more natural.
 
-- Common filler words (for example: the, a, of, to, and, so)
-- Technical identifiers such as acronyms, CamelCase names and alphanumeric part numbers
+The gap size can be adjusted using the **G−** and **G+** buttons and is remembered automatically.
 
-This approach makes the teleprompter much more tolerant of speech recognition errors, especially when reading technical presentations.
+## Mirror Mode
 
-## Voice Commands
+Mirror the script for use with beam-splitter teleprompter hardware.
 
-### Hey reset
+Only the script is mirrored. The toolbar, editor and help pages remain readable.
 
-Resets the teleprompter back to the beginning of the script without stopping voice recognition.
+## Built-in Script Editor
 
-Useful when restarting a recording take.
+- Edit scripts directly in the browser
+- Open plain text (`.txt`) files
+- Save edited scripts
+- Automatically remembers the last script used
 
-## Supported Browsers
+## Adjustable Display
 
-Voice Teleprompter uses the browser's Web Speech API.
+- Adjustable font size
+- Fullscreen mode
+- Auto-hiding toolbar
+- Mirror mode
+- Eye Contact mode with adjustable gap
 
-Recommended browsers:
+## Help System
 
-- Google Chrome
-- Microsoft Edge
+The built-in Help page includes:
 
-Other browsers may have limited or no speech recognition support.
-
-## Usage
-
-1. Open the HTML file in Chrome or Edge.
-2. Click **Open Script** to load a text file, or use **Edit Script** to type directly into the built-in editor.
-3. Click **Start Voice Control**.
-4. Begin reading.
-5. The teleprompter follows your speech automatically.
-6. Say **"Hey reset"** to return to the beginning whenever required.
-
-## Script Tips
-
-If a technical word is not being recognised reliably, you can make it optional by changing its format.
-
-Examples:
-
-| Required    | Optional   |
-| ----------- | ---------- |
-| rssi        | RSSI       |
-| Bluetooth   | BlueTooth  |
-| Open Thread | OpenThread |
-
-Words displayed in **cyan** are optional.
-
-Words displayed in **white** are required.
+- Controls reference
+- Voice commands
+- Recognition guide
+- Required vs optional words
+- Script statistics
+- Adjustable reading speed
+- Tips for improving recognition
 
 ## Script Statistics
 
-The Help page displays:
+Displays:
 
-- Total words
-- Number of sentences
-- Optional words
+- Word count
+- Sentence count
+- Optional word count
 - Estimated reading time
 
 Reading time is calculated using an adjustable Words Per Minute (WPM) value.
+
+## Recognition Tips
+
+If a word is difficult for speech recognition, it can easily be made optional.
+
+| Required | Optional |
+|----------|----------|
+| Bluetooth | BlueTooth |
+| Open Thread | OpenThread |
+| rssi | RSSI |
+
+Optional words are highlighted in **cyan**.
+
+## Browser Support
+
+Voice Teleprompter uses the browser's Web Speech API.
+
+Recommended browser:
+
+- Google Chrome
+
+Support in other browsers depends on their implementation of the Web Speech API.
 
 ## Privacy
 
 Everything runs locally in your browser.
 
-Scripts are stored only in your browser's local storage so they can be restored the next time the teleprompter is opened.
+No scripts are uploaded anywhere.
 
-No scripts are uploaded to any external service by the application itself.
+The application stores only the following in browser local storage:
 
-## Roadmap
+- Last script
+- Font size
+- Reading speed
+- Mirror mode
+- Eye Contact gap size
 
-Potential future improvements include:
+## Installation
 
-- Export a self-contained HTML teleprompter with the current script embedded
-- User-configurable optional-word rules
-- Additional recognition diagnostics
-- Theme customisation
+No installation is required.
+
+Clone or download the repository and open **index.html** in Google Chrome.
+
+## License
+
+This project is licensed under the **Apache License 2.0**.
+
+See the `LICENSE` file for details.
