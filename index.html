@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Voice Teleprompter v1.0.2</title>
+<title>Voice Teleprompter v1.0.3</title>
 <style>
   :root {
     --bg: #050505;
@@ -283,13 +283,17 @@
     outline: none;
   }
   #scriptEditor:focus { border-color: #888; }
+  #script.mirrored {
+    transform: scaleX(-1);
+    transform-origin: center;
+  }
 
 </style>
 </head>
 <body>
 <div id="toolbar">
   <span id="appTitle">Voice Teleprompter</span>
-  <span id="appVersion">v1.0.2</span>
+  <span id="appVersion">v1.0.3</span>
   <button id="helpBtn">Help</button>
   <button id="openBtn">Open Script</button>
   <input id="fileInput" type="file" accept=".txt,.md,text/plain,text/markdown" style="display:none" />
@@ -298,6 +302,7 @@
   <button id="resetBtn">Reset</button>
   <button id="fontDownBtn">A−</button>
   <button id="fontUpBtn">A+</button>
+  <button id="mirrorBtn">Mirror</button>
   <button id="fullscreenBtn">Fullscreen</button>
   <span id="status">Idle</span>
   <span id="debug">Waiting for: —</span>
@@ -322,7 +327,7 @@
     <div class="helpTop">
       <div>
         <h2>Voice Teleprompter</h2>
-        <div class="versionText">v1.0.2</div>
+        <div class="versionText">v1.0.3</div>
       </div>
       <button id="closeHelpBtn">Close</button>
     </div>
@@ -440,7 +445,7 @@
 </div>
 
 <script>
-const APP_VERSION = 'v1.0.2';
+const APP_VERSION = 'v1.0.3';
 const SCRIPT_TEXT = `Welcome to Voice TeleprompteR. This is the default demonstration script. It shows how the TeleprompteR follows your voice instead of scrolling at a fixed speed. Notice that the script only advances while you are speaking. You can pause at any time to think, look at your audience, or demonstrate something on screen without losing your place. Some words appear in cyan. These are optional words. They help the TeleprompteR cope with common filler words, technical terms, acronyms, product names, and unusual identifiers. White words are required. These are the words the recognizer uses to keep track of your position in the script. You can load your own script using the Open Script button, or edit the current script using the built in editor. The TeleprompteR automatically remembers the last script you used, so the next time you open it your work is restored automatically. For more information about the recognition system, colour coding, script statistics, and available voice commands, open the Help page from the toolbar. You are now ready to load your own script and start recording with Voice TeleprompteR.`;
 let currentScript = localStorage.getItem('teleprompterScriptText') || SCRIPT_TEXT;
 
@@ -470,6 +475,7 @@ const downloadScriptBtn = document.getElementById('downloadScriptBtn');
 const closeEditBtn = document.getElementById('closeEditBtn');
 const fontDownBtn = document.getElementById('fontDownBtn');
 const fontUpBtn = document.getElementById('fontUpBtn');
+const mirrorBtn = document.getElementById('mirrorBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const toolbar = document.getElementById('toolbar');
 const helpBtn = document.getElementById('helpBtn');
@@ -490,6 +496,7 @@ let sentenceLockedUntilNextEvent = false;
 let lastScrollAt = 0;
 let toolbarHideTimer = null;
 let readingWpm = parseInt(localStorage.getItem('teleprompterWpm') || '145', 10);
+let mirrorEnabled = localStorage.getItem('teleprompterMirror') === '1';
 
 function normalize(s) {
   return s.toLowerCase()
@@ -766,6 +773,18 @@ function changeFont(delta) {
   applyFontPx(currentFontPx() + delta);
 }
 
+function applyMirror(enabled) {
+  mirrorEnabled = !!enabled;
+  scriptEl.classList.toggle('mirrored', mirrorEnabled);
+  localStorage.setItem('teleprompterMirror', mirrorEnabled ? '1' : '0');
+  if (mirrorBtn) mirrorBtn.textContent = mirrorEnabled ? 'Unmirror' : 'Mirror';
+}
+
+function toggleMirror() {
+  applyMirror(!mirrorEnabled);
+}
+
+
 function showToolbar() {
   toolbar.classList.remove('toolbar-hidden');
   clearTimeout(toolbarHideTimer);
@@ -903,6 +922,7 @@ function resetApplicationSettings() {
     localStorage.removeItem("teleprompterScriptText");
     localStorage.removeItem("teleprompterFontPx");
     localStorage.removeItem("teleprompterWpm");
+    localStorage.removeItem("teleprompterMirror");
 
     location.reload();
 }
@@ -993,6 +1013,7 @@ startBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', resetTeleprompter);
 fontDownBtn.addEventListener('click', () => changeFont(-4));
 fontUpBtn.addEventListener('click', () => changeFont(4));
+if (mirrorBtn) mirrorBtn.addEventListener('click', toggleMirror);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 document.addEventListener('fullscreenchange', syncFullscreenButton);
 document.addEventListener('mousemove', showToolbar);
@@ -1005,6 +1026,7 @@ if (resetAppBtn) {
 }
 
 render();
+applyMirror(mirrorEnabled);
 if (wpmInput) wpmInput.value = String(readingWpm || 145);
 updateStats();
 console.log('Voice Teleprompter', APP_VERSION);
