@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Voice Teleprompter v1.0.3</title>
+<title>Voice Teleprompter v1.1.0</title>
 <style>
   :root {
     --bg: #050505;
@@ -287,22 +287,33 @@
     transform: scaleX(-1);
     transform-origin: center;
   }
+  .eyeContactGap {
+    display: block;
+    height: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background: #202020;
+    border-top: 1px solid #353535;
+    border-bottom: 1px solid #353535;
+  }
 
 </style>
 </head>
 <body>
 <div id="toolbar">
   <span id="appTitle">Voice Teleprompter</span>
-  <span id="appVersion">v1.0.3</span>
+  <span id="appVersion">v1.1.0</span>
   <button id="helpBtn">Help</button>
-  <button id="openBtn">Open Script</button>
+  <button id="openBtn">Open</button>
   <input id="fileInput" type="file" accept=".txt,.md,text/plain,text/markdown" style="display:none" />
-  <button id="editBtn">Edit Script</button>
-  <button id="startBtn">Start voice control</button>
+  <button id="editBtn">Edit</button>
+  <button id="startBtn">Start</button>
   <button id="resetBtn">Reset</button>
   <button id="fontDownBtn">A−</button>
   <button id="fontUpBtn">A+</button>
   <button id="mirrorBtn">Mirror</button>
+  <button id="eyeGapDownBtn">G−</button>
+  <button id="eyeGapUpBtn">G+</button>
   <button id="fullscreenBtn">Fullscreen</button>
   <span id="status">Idle</span>
   <span id="debug">Waiting for: —</span>
@@ -312,10 +323,10 @@
 <div id="editorOverlay">
   <div id="editorPanel">
     <div id="editorBar">
-      <strong>Edit Script</strong>
+      <strong>Edit</strong>
       <span class="spacer"></span>
       <button id="applyEditBtn">Apply</button>
-      <button id="downloadScriptBtn">Download Script</button>
+      <button id="downloadScriptBtn">Download</button>
       <button id="closeEditBtn">Close</button>
     </div>
     <textarea id="scriptEditor" spellcheck="true"></textarea>
@@ -327,7 +338,7 @@
     <div class="helpTop">
       <div>
         <h2>Voice Teleprompter</h2>
-        <div class="versionText">v1.0.3</div>
+        <div class="versionText">v1.1.0</div>
       </div>
       <button id="closeHelpBtn">Close</button>
     </div>
@@ -364,14 +375,28 @@
 
     <h3>Controls</h3>
     <table class="helpTable">
-      <tr><td>Open Script</td><td>Load a plain text script. The last loaded script text is remembered automatically in this browser.</td></tr>
-      <tr><td>Edit Script</td><td>Open the built-in editor. Press Apply to update the teleprompter.</td></tr>
-      <tr><td>Start Voice Control</td><td>Start or stop speech recognition. When active, the teleprompter follows your speech automatically.</td></tr>
+      <tr><td>Open</td><td>Load a plain text script. The last loaded script text is remembered automatically in this browser.</td></tr>
+      <tr><td>Edit</td><td>Open the built-in editor. Press Apply to update the teleprompter.</td></tr>
+      <tr><td>Start / Stop</td><td>Start or stop speech recognition. When active, the teleprompter follows your speech automatically.</td></tr>
       <tr><td>Reset</td><td>Return to the beginning of the current script.</td></tr>
       <tr><td>A- / A+</td><td>Decrease or increase the teleprompter font size.</td></tr>
       <tr><td>Fullscreen</td><td>Enter fullscreen mode. When already fullscreen, the button changes to Exit Fullscreen.</td></tr>
-      <tr><td>Download Script</td><td>Available in the editor. Saves the current script as a text file.</td></tr>
+      <tr><td>G− / G+</td><td>Decrease or increase the fixed horizontal Eye Contact gap. Each click changes the gap by half the default line height, and the selected size is remembered automatically.</td></tr>
+      <tr><td>Download</td><td>Available in the editor. Saves the current script as a text file.</td></tr>
     </table>
+
+    <h3>Eye Contact Gap</h3>
+    <p>
+      The Eye Contact gap is a fixed horizontal band in the reading area. It is
+      intended for a webcam positioned in front of the screen, so the next lines
+      of text appear just above the camera. This helps you read while looking
+      closer to the lens.
+    </p>
+    <p>
+      Use <strong>G−</strong> and <strong>G+</strong> to reduce or increase the gap height.
+      The gap is shown as a dark grey band with subtle borders, and the chosen
+      size is saved in this browser. Set the gap to zero steps to hide it.
+    </p>
 
     <h3>Voice Commands</h3>
     <table class="helpTable">
@@ -445,8 +470,8 @@
 </div>
 
 <script>
-const APP_VERSION = 'v1.0.3';
-const SCRIPT_TEXT = `Welcome to Voice TeleprompteR. This is the default demonstration script. It shows how the TeleprompteR follows your voice instead of scrolling at a fixed speed. Notice that the script only advances while you are speaking. You can pause at any time to think, look at your audience, or demonstrate something on screen without losing your place. Some words appear in cyan. These are optional words. They help the TeleprompteR cope with common filler words, technical terms, acronyms, product names, and unusual identifiers. White words are required. These are the words the recognizer uses to keep track of your position in the script. You can load your own script using the Open Script button, or edit the current script using the built in editor. The TeleprompteR automatically remembers the last script you used, so the next time you open it your work is restored automatically. For more information about the recognition system, colour coding, script statistics, and available voice commands, open the Help page from the toolbar. You are now ready to load your own script and start recording with Voice TeleprompteR.`;
+const APP_VERSION = 'v1.1.0';
+const SCRIPT_TEXT = `Welcome to Voice TeleprompteR. This is the default demonstration script. It shows how the TeleprompteR follows your voice instead of scrolling at a fixed speed. Notice that the script only advances while you are speaking. You can pause at any time to think, look at your audience, or demonstrate something on screen without losing your place. Some words appear in cyan. These are optional words. They help the TeleprompteR cope with common filler words, technical terms, acronyms, product names, and unusual identifiers. White words are required. These are the words the recognizer uses to keep track of your position in the script. You can load your own script using the Open button, or edit the current script using the built in editor. The TeleprompteR automatically remembers the last script you used, so the next time you open it your work is restored automatically. For more information about the recognition system, colour coding, script statistics, and available voice commands, open the Help page from the toolbar. You are now ready to load your own script and start recording with Voice TeleprompteR.`;
 let currentScript = localStorage.getItem('teleprompterScriptText') || SCRIPT_TEXT;
 
 const filler = new Set(['a','an','and','are','as','at','be','but','by','for','from','i','in','is','it','of','on','or','so','that','the','to','we','were','when','while','with']);
@@ -476,6 +501,8 @@ const closeEditBtn = document.getElementById('closeEditBtn');
 const fontDownBtn = document.getElementById('fontDownBtn');
 const fontUpBtn = document.getElementById('fontUpBtn');
 const mirrorBtn = document.getElementById('mirrorBtn');
+const eyeGapDownBtn = document.getElementById('eyeGapDownBtn');
+const eyeGapUpBtn = document.getElementById('eyeGapUpBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const toolbar = document.getElementById('toolbar');
 const helpBtn = document.getElementById('helpBtn');
@@ -489,6 +516,7 @@ const statTime = document.getElementById('statTime');
 const unsupported = document.getElementById('unsupported');
 
 let words = [];
+let sentenceEls = [];
 let pointer = 0;
 let recognition = null;
 let listening = false;
@@ -497,6 +525,10 @@ let lastScrollAt = 0;
 let toolbarHideTimer = null;
 let readingWpm = parseInt(localStorage.getItem('teleprompterWpm') || '145', 10);
 let mirrorEnabled = localStorage.getItem('teleprompterMirror') === '1';
+const EYE_CONTACT_GAP_STEP_PX = 48; // Half the approximate default line height.
+let eyeContactGapSteps = parseInt(localStorage.getItem('teleprompterEyeContactGapSteps') || '4', 10);
+if (!Number.isFinite(eyeContactGapSteps)) eyeContactGapSteps = 4;
+eyeContactGapSteps = Math.max(0, Math.min(12, eyeContactGapSteps));
 
 function normalize(s) {
   return s.toLowerCase()
@@ -571,9 +603,14 @@ function tokenizeSentence(sentence, sentenceIndex) {
 function render() {
   scriptEl.innerHTML = '';
   words = [];
+  sentenceEls = [];
+  const eyeGapEl = document.createElement('span');
+  eyeGapEl.id = 'eyeContactGap';
+  eyeGapEl.className = 'eyeContactGap';
   splitSentences(currentScript).forEach((sentence, sentenceIndex) => {
     const sentEl = document.createElement('span');
     sentEl.className = 'sentence';
+    sentenceEls.push(sentEl);
     const sentWords = tokenizeSentence(sentence, sentenceIndex);
     sentWords.forEach((w, i) => {
       const el = document.createElement('span');
@@ -589,6 +626,8 @@ function render() {
     });
     scriptEl.appendChild(sentEl);
   });
+  scriptEl.appendChild(eyeGapEl);
+  updateEyeContactGap();
   updateDisplay(true);
   updateStats();
 }
@@ -614,6 +653,7 @@ function expectedDebug() {
 }
 
 function updateDisplay(forceScroll = false) {
+  updateEyeContactGap();
   words.forEach((w, i) => {
     w.el.classList.toggle('read', i < pointer);
     w.el.classList.toggle('current', i === pointer);
@@ -631,8 +671,20 @@ function updateDisplay(forceScroll = false) {
 
 function scrollToPointer() {
   if (pointer >= words.length) return;
-  const el = words[pointer].el;
   const stageRect = stage.getBoundingClientRect();
+
+  if (eyeContactGapSteps > 0) {
+    const gap = document.getElementById('eyeContactGap');
+    if (gap && gap.offsetHeight > 0) {
+      const gapRect = gap.getBoundingClientRect();
+      const gapTargetTop = Math.max(0, (stage.clientHeight - gap.offsetHeight) / 2);
+      const targetTop = stage.scrollTop + (gapRect.top - stageRect.top) - gapTargetTop;
+      stage.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+      return;
+    }
+  }
+
+  const el = words[pointer].el;
   const elRect = el.getBoundingClientRect();
   const targetTop = stage.scrollTop + (elRect.top - stageRect.top) - stage.clientHeight * 0.42;
   stage.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
@@ -784,6 +836,80 @@ function toggleMirror() {
   applyMirror(!mirrorEnabled);
 }
 
+function applyEyeContactGap() {
+  eyeContactGapSteps = Math.max(0, Math.min(12, eyeContactGapSteps));
+  localStorage.setItem('teleprompterEyeContactGapSteps', String(eyeContactGapSteps));
+
+  const gap = document.getElementById('eyeContactGap');
+  if (gap) {
+    gap.style.height = (eyeContactGapSteps * EYE_CONTACT_GAP_STEP_PX) + 'px';
+    gap.style.display = eyeContactGapSteps > 0 ? 'block' : 'none';
+  }
+
+  if (eyeGapDownBtn) eyeGapDownBtn.disabled = eyeContactGapSteps <= 0;
+  if (eyeGapUpBtn) eyeGapUpBtn.disabled = eyeContactGapSteps >= 12;
+
+  updateEyeContactGap();
+}
+
+function changeEyeContactGap(delta) {
+  eyeContactGapSteps = Math.max(0, Math.min(12, eyeContactGapSteps + delta));
+  applyEyeContactGap();
+  updateDisplay(true);
+  statusEl.textContent = eyeContactGapSteps > 0 ? 'Eye contact gap: ' + eyeContactGapSteps + ' steps' : 'Eye contact gap hidden';
+}
+
+function updateEyeContactGap() {
+  const gap = document.getElementById('eyeContactGap');
+  if (!gap || !sentenceEls.length || !words.length) return;
+
+  gap.style.height = (eyeContactGapSteps * EYE_CONTACT_GAP_STEP_PX) + 'px';
+  gap.style.display = eyeContactGapSteps > 0 ? 'block' : 'none';
+
+  if (eyeContactGapSteps <= 0 || pointer >= words.length) {
+    if (gap.parentNode !== scriptEl) scriptEl.appendChild(gap);
+    return;
+  }
+
+  // Move the gap after the next two rendered lines from the current word.
+  // The browser decides line wrapping, so we measure the actual word positions
+  // and place the gap after the last word on the second visible line. This
+  // keeps long sentences readable in small windows without hiding text.
+  if (gap.parentNode !== scriptEl || gap.nextSibling !== null) {
+    scriptEl.appendChild(gap);
+  }
+  gap.style.display = 'none';
+
+  const lineTops = [];
+  let targetIndex = pointer;
+  const tolerance = 3;
+
+  for (let i = pointer; i < words.length; i++) {
+    const rect = words[i].el.getBoundingClientRect();
+    const top = rect.top;
+    let lineIndex = lineTops.findIndex(v => Math.abs(v - top) <= tolerance);
+
+    if (lineIndex === -1) {
+      lineTops.push(top);
+      lineIndex = lineTops.length - 1;
+    }
+
+    if (lineIndex >= 2) break;
+    targetIndex = i;
+  }
+
+  gap.style.display = 'block';
+
+  const targetWord = words[targetIndex];
+  const punctEl = targetWord?.el?.nextSibling;
+  const parent = targetWord?.el?.parentNode;
+
+  if (parent && punctEl) {
+    parent.insertBefore(gap, punctEl.nextSibling);
+  } else {
+    scriptEl.appendChild(gap);
+  }
+}
 
 function showToolbar() {
   toolbar.classList.remove('toolbar-hidden');
@@ -923,6 +1049,8 @@ function resetApplicationSettings() {
     localStorage.removeItem("teleprompterFontPx");
     localStorage.removeItem("teleprompterWpm");
     localStorage.removeItem("teleprompterMirror");
+    localStorage.removeItem("teleprompterEyeContact");
+    localStorage.removeItem("teleprompterEyeContactGapSteps");
 
     location.reload();
 }
@@ -958,14 +1086,14 @@ function startRecognition() {
 
   recognition.onstart = () => {
     listening = true;
-    startBtn.textContent = 'Stop voice control';
+    startBtn.textContent = 'Stop';
     statusEl.textContent = 'Listening';
   };
   recognition.onend = () => {
     if (listening) {
       try { recognition.start(); } catch (e) {}
     } else {
-      startBtn.textContent = 'Start voice control';
+      startBtn.textContent = 'Start';
       statusEl.textContent = 'Stopped';
     }
   };
@@ -1014,6 +1142,8 @@ resetBtn.addEventListener('click', resetTeleprompter);
 fontDownBtn.addEventListener('click', () => changeFont(-4));
 fontUpBtn.addEventListener('click', () => changeFont(4));
 if (mirrorBtn) mirrorBtn.addEventListener('click', toggleMirror);
+if (eyeGapDownBtn) eyeGapDownBtn.addEventListener('click', () => changeEyeContactGap(-1));
+if (eyeGapUpBtn) eyeGapUpBtn.addEventListener('click', () => changeEyeContactGap(1));
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 document.addEventListener('fullscreenchange', syncFullscreenButton);
 document.addEventListener('mousemove', showToolbar);
@@ -1027,6 +1157,7 @@ if (resetAppBtn) {
 
 render();
 applyMirror(mirrorEnabled);
+applyEyeContactGap();
 if (wpmInput) wpmInput.value = String(readingWpm || 145);
 updateStats();
 console.log('Voice Teleprompter', APP_VERSION);
