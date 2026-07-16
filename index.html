@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Voice Teleprompter v1.1.0</title>
+<title>Voice Teleprompter v1.1.1</title>
 <style>
   :root {
     --bg: #050505;
@@ -283,10 +283,10 @@
     outline: none;
   }
   #scriptEditor:focus { border-color: #888; }
-  #script.mirrored {
-    transform: scaleX(-1);
+  #script {
     transform-origin: center;
   }
+
   .eyeContactGap {
     display: block;
     height: 0;
@@ -302,7 +302,7 @@
 <body>
 <div id="toolbar">
   <span id="appTitle">Voice Teleprompter</span>
-  <span id="appVersion">v1.1.0</span>
+  <span id="appVersion">v1.1.1</span>
   <button id="helpBtn">Help</button>
   <button id="openBtn">Open</button>
   <input id="fileInput" type="file" accept=".txt,.md,text/plain,text/markdown" style="display:none" />
@@ -312,6 +312,7 @@
   <button id="fontDownBtn">A−</button>
   <button id="fontUpBtn">A+</button>
   <button id="mirrorBtn">Mirror</button>
+  <button id="flipBtn">Flip</button>
   <button id="eyeGapDownBtn">G−</button>
   <button id="eyeGapUpBtn">G+</button>
   <button id="fullscreenBtn">Fullscreen</button>
@@ -338,7 +339,7 @@
     <div class="helpTop">
       <div>
         <h2>Voice Teleprompter</h2>
-        <div class="versionText">v1.1.0</div>
+        <div class="versionText">v1.1.1</div>
       </div>
       <button id="closeHelpBtn">Close</button>
     </div>
@@ -380,6 +381,8 @@
       <tr><td>Start / Stop</td><td>Start or stop speech recognition. When active, the teleprompter follows your speech automatically.</td></tr>
       <tr><td>Reset</td><td>Return to the beginning of the current script.</td></tr>
       <tr><td>A- / A+</td><td>Decrease or increase the teleprompter font size.</td></tr>
+      <tr><td>Mirror / Unmirror</td><td>Mirror the script horizontally for use with beam-splitter teleprompter hardware.</td></tr>
+      <tr><td>Flip / Unflip</td><td>Flip the script vertically for display setups where the screen image needs to be inverted.</td></tr>
       <tr><td>Fullscreen</td><td>Enter fullscreen mode. When already fullscreen, the button changes to Exit Fullscreen.</td></tr>
       <tr><td>G− / G+</td><td>Decrease or increase the fixed horizontal Eye Contact gap. Each click changes the gap by half the default line height, and the selected size is remembered automatically.</td></tr>
       <tr><td>Download</td><td>Available in the editor. Saves the current script as a text file.</td></tr>
@@ -470,7 +473,7 @@
 </div>
 
 <script>
-const APP_VERSION = 'v1.1.0';
+const APP_VERSION = 'v1.1.1';
 const SCRIPT_TEXT = `Welcome to Voice TeleprompteR. This is the default demonstration script. It shows how the TeleprompteR follows your voice instead of scrolling at a fixed speed. Notice that the script only advances while you are speaking. You can pause at any time to think, look at your audience, or demonstrate something on screen without losing your place. Some words appear in cyan. These are optional words. They help the TeleprompteR cope with common filler words, technical terms, acronyms, product names, and unusual identifiers. White words are required. These are the words the recognizer uses to keep track of your position in the script. You can load your own script using the Open button, or edit the current script using the built in editor. The TeleprompteR automatically remembers the last script you used, so the next time you open it your work is restored automatically. For more information about the recognition system, colour coding, script statistics, and available voice commands, open the Help page from the toolbar. You are now ready to load your own script and start recording with Voice TeleprompteR.`;
 let currentScript = localStorage.getItem('teleprompterScriptText') || SCRIPT_TEXT;
 
@@ -501,6 +504,7 @@ const closeEditBtn = document.getElementById('closeEditBtn');
 const fontDownBtn = document.getElementById('fontDownBtn');
 const fontUpBtn = document.getElementById('fontUpBtn');
 const mirrorBtn = document.getElementById('mirrorBtn');
+const flipBtn = document.getElementById('flipBtn');
 const eyeGapDownBtn = document.getElementById('eyeGapDownBtn');
 const eyeGapUpBtn = document.getElementById('eyeGapUpBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -525,7 +529,8 @@ let lastScrollAt = 0;
 let toolbarHideTimer = null;
 let readingWpm = parseInt(localStorage.getItem('teleprompterWpm') || '145', 10);
 let mirrorEnabled = localStorage.getItem('teleprompterMirror') === '1';
-const EYE_CONTACT_GAP_STEP_PX = 48; // Half the approximate default line height.
+let flipEnabled = localStorage.getItem('teleprompterFlip') === '1';
+const EYE_CONTACT_GAP_STEP_PX = 48;
 let eyeContactGapSteps = parseInt(localStorage.getItem('teleprompterEyeContactGapSteps') || '4', 10);
 if (!Number.isFinite(eyeContactGapSteps)) eyeContactGapSteps = 4;
 eyeContactGapSteps = Math.max(0, Math.min(12, eyeContactGapSteps));
@@ -825,16 +830,42 @@ function changeFont(delta) {
   applyFontPx(currentFontPx() + delta);
 }
 
+function updateScriptTransform() {
+  let transform = '';
+
+  if (flipEnabled) {
+    transform += 'rotate(180deg) ';
+  }
+
+  if (mirrorEnabled) {
+    transform += 'scaleX(-1) ';
+  }
+
+  scriptEl.style.transform = transform.trim() || 'none';
+}
+
 function applyMirror(enabled) {
   mirrorEnabled = !!enabled;
-  scriptEl.classList.toggle('mirrored', mirrorEnabled);
   localStorage.setItem('teleprompterMirror', mirrorEnabled ? '1' : '0');
   if (mirrorBtn) mirrorBtn.textContent = mirrorEnabled ? 'Unmirror' : 'Mirror';
+  updateScriptTransform();
+}
+
+function applyFlip(enabled) {
+  flipEnabled = !!enabled;
+  localStorage.setItem('teleprompterFlip', flipEnabled ? '1' : '0');
+  if (flipBtn) flipBtn.textContent = flipEnabled ? 'Unflip' : 'Flip';
+  updateScriptTransform();
 }
 
 function toggleMirror() {
   applyMirror(!mirrorEnabled);
 }
+
+function toggleFlip() {
+  applyFlip(!flipEnabled);
+}
+
 
 function applyEyeContactGap() {
   eyeContactGapSteps = Math.max(0, Math.min(12, eyeContactGapSteps));
@@ -1049,6 +1080,7 @@ function resetApplicationSettings() {
     localStorage.removeItem("teleprompterFontPx");
     localStorage.removeItem("teleprompterWpm");
     localStorage.removeItem("teleprompterMirror");
+    localStorage.removeItem("teleprompterFlip");
     localStorage.removeItem("teleprompterEyeContact");
     localStorage.removeItem("teleprompterEyeContactGapSteps");
 
@@ -1142,6 +1174,7 @@ resetBtn.addEventListener('click', resetTeleprompter);
 fontDownBtn.addEventListener('click', () => changeFont(-4));
 fontUpBtn.addEventListener('click', () => changeFont(4));
 if (mirrorBtn) mirrorBtn.addEventListener('click', toggleMirror);
+if (flipBtn) flipBtn.addEventListener('click', toggleFlip);
 if (eyeGapDownBtn) eyeGapDownBtn.addEventListener('click', () => changeEyeContactGap(-1));
 if (eyeGapUpBtn) eyeGapUpBtn.addEventListener('click', () => changeEyeContactGap(1));
 fullscreenBtn.addEventListener('click', toggleFullscreen);
@@ -1157,6 +1190,7 @@ if (resetAppBtn) {
 
 render();
 applyMirror(mirrorEnabled);
+applyFlip(flipEnabled);
 applyEyeContactGap();
 if (wpmInput) wpmInput.value = String(readingWpm || 145);
 updateStats();
