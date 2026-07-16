@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Voice Teleprompter Help</title>
+<script src="version.js"></script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="help-page">
+<div id="helpPanel">
+    <div class="helpTop">
+      <div>
+        <h2>Voice Teleprompter</h2>
+      </div>
+      <button id="closeHelpBtn">Close</button>
+    </div>
+
+    <h3>Script Statistics</h3>
+    <p>
+      The statistics panel shows total words, number of sentences, optional words,
+      and estimated reading time.
+    </p>
+
+    <div id="statsGrid">
+      <div class="statCard"><div class="statLabel">Words</div><div id="statWords" class="statValue">—</div></div>
+      <div class="statCard"><div class="statLabel">Sentences</div><div id="statSentences" class="statValue">—</div></div>
+      <div class="statCard"><div class="statLabel">Optional words</div><div id="statOptional" class="statValue">—</div></div>
+      <div class="statCard"><div class="statLabel">Estimated time</div><div id="statTime" class="statValue">—</div></div>
+    </div>
+
+    <p>
+      Reading time is calculated using the selected Words Per Minute value.
+      The default is 145 WPM, but you can adjust it to match your own speaking speed.
+    </p>
+
+    <label for="wpmInput"><strong>Reading speed:</strong></label>
+    <input id="wpmInput" type="number" min="60" max="300" step="5" value="145" />
+    <span> words per minute</span>
+
+    <h3>About</h3>
+
+    <p>
+      This teleprompter uses speech recognition to automatically follow your script.
+      It is designed to keep moving through technical scripts by treating some words
+      as required and some words as optional.
+    </p>
+
+    <p>
+    Google Chrome is the recommended browser. Press <strong>F11</strong> for fullscreen.
+    </p>
+
+    <h3>Microphone Selection</h3>
+
+    <p>
+    Chrome normally uses your system's default microphone. If you need to override this, copy the URL below, paste it into the Chrome address bar, and select the microphone to use with Voice Teleprompter.
+    </p>
+
+    <button onclick="navigator.clipboard.writeText('chrome://settings/content/microphone')">
+        Copy Microphone Settings URL
+    </button>
+
+    <h3>Controls</h3>
+    <table class="helpTable">
+      <tr><td>Open</td><td>Load a plain text script. The last loaded script text is remembered automatically in this browser.</td></tr>
+      <tr><td>Edit</td><td>Open the built-in editor. Press Apply to update the teleprompter.</td></tr>
+      <tr><td>Start / Stop</td><td>Start or stop speech recognition. When active, the teleprompter follows your speech automatically.</td></tr>
+      <tr><td>Reset</td><td>Return to the beginning of the current script.</td></tr>
+      <tr><td>A- / A+</td><td>Decrease or increase the teleprompter font size.</td></tr>
+      <tr><td>Mirror / Unmirror</td><td>Mirror the script horizontally for use with beam-splitter teleprompter hardware.</td></tr>
+      <tr><td>Flip / Unflip</td><td>Flip the script vertically for display setups where the screen image needs to be inverted.</td></tr>
+      <tr><td>G− / G+</td><td>Decrease or increase the fixed horizontal Eye Contact gap. Each click changes the gap by half the default line height, and the selected size is remembered automatically.</td></tr>
+      <tr><td>Download</td><td>Available in the editor. Saves the current script as a text file.</td></tr>
+    </table>
+
+    <h3>Eye Contact Gap</h3>
+    <p>
+      The Eye Contact gap is a fixed horizontal band in the reading area. It is
+      intended for a webcam positioned in front of the screen, so the next lines
+      of text appear just above the camera. This helps you read while looking
+      closer to the lens.
+    </p>
+    <p>
+      Use <strong>G−</strong> and <strong>G+</strong> to reduce or increase the gap height.
+      The gap is shown as a dark grey band with subtle borders, and the chosen
+      size is saved in this browser. Set the gap to zero steps to hide it.
+    </p>
+
+    <h3>Voice Commands</h3>
+    <table class="helpTable">
+      <tr><td>Hey reset</td><td>Reset to the beginning without stopping voice recognition.</td></tr>
+    </table>
+
+    <h3>Recognition Guide</h3>
+    <div class="legendRow"><span class="legendSwatch legendRequired"></span><span><strong>White</strong> words are required. The recognizer normally expects to hear these words.</span></div>
+    <div class="legendRow"><span class="legendSwatch legendOptional"></span><span><strong>Cyan</strong> words are optional. They may be skipped if the following required word is recognized.</span></div>
+    <div class="legendRow"><span class="legendSwatch legendCurrent"></span><span><strong>Yellow</strong> shows the current word or reading position.</span></div>
+    <div class="legendRow"><span class="legendSwatch legendRead"></span><span><strong>Grey</strong> words have already been read.</span></div>
+
+    <h3>Why are some words cyan?</h3>
+    <p>
+      Some cyan words are filler words such as <b>a</b>, <b>an</b>, <b>the</b>,
+      <b>of</b>, <b>to</b>, <b>in</b>, <b>with</b>, <b>and</b>, <b>so</b>,
+      and <b>when</b>. These are optional because they do not help much with
+      tracking your position and are usually not recognized individually.
+    </p>
+
+    <p>
+      Other cyan words are technical words that may be difficult for speech recognition,
+      such as acronyms, product names, identifiers, or CamelCase terms.
+    </p>
+
+    <h3>Making a word optional</h3>
+    <p>
+      If a white word is not being recognized reliably, edit the script so it matches
+      one of these optional-word patterns:
+    </p>
+
+    <table class="helpTable">
+      <tr><td>ALL CAPITALS</td><td>RSSI, BLE, GPIO</td></tr>
+      <tr><td>Letters and numbers</td><td>EFR32, STM32, SiWx917</td></tr>
+      <tr><td>CamelCase</td><td>OpenThread, BlueTooth</td></tr>
+    </table>
+
+    <h3>Making a word required</h3>
+    <p>
+      If a cyan word should be required, edit it so it no longer matches the optional-word rules.
+    </p>
+
+    <table class="helpTable">
+      <tr><td>RSSI</td><td>rssi</td></tr>
+      <tr><td>OpenThread</td><td>Open Thread</td></tr>
+      <tr><td>BlueTooth</td><td>Bluetooth</td></tr>
+    </table>
+
+    <p>
+      <b>Tip:</b> Only make a word optional if it consistently causes recognition problems.
+      Leaving ordinary English words as required generally gives the most accurate tracking.
+    </p>
+
+    <hr>
+
+    <h3>Developer</h3>
+
+    <p>
+    The button below clears all settings and locally stored scripts, allowing you to
+    test the first-run experience.
+    </p>
+
+    <p>
+    <button id="resetAppBtn">Reset Application Settings</button>
+    </p>
+
+    <p style="margin-top: 28px; text-align: center;">
+      <button id="closeHelpBottomBtn" onclick="closeHelp()">Close</button>
+    </p>
+  </div>
+<script>
+function closeHelp() {
+  if (history.length > 1) {
+    history.back();
+  } else {
+    location.href = 'index.html';
+  }
+}
+function valueOrDash(key) {
+  return localStorage.getItem(key) || '—';
+}
+function loadHelpStats() {
+  const words = document.getElementById('statWords');
+  const sentences = document.getElementById('statSentences');
+  const optional = document.getElementById('statOptional');
+  const time = document.getElementById('statTime');
+  const wpm = document.getElementById('wpmInput');
+  if (words) words.textContent = valueOrDash('teleprompterStatWords');
+  if (sentences) sentences.textContent = valueOrDash('teleprompterStatSentences');
+  if (optional) optional.textContent = valueOrDash('teleprompterStatOptional');
+  if (time) time.textContent = valueOrDash('teleprompterStatTime');
+  if (wpm) wpm.value = localStorage.getItem('teleprompterWpm') || '145';
+}
+function updateHelpWpm() {
+  const wpm = document.getElementById('wpmInput');
+  if (!wpm) return;
+  const value = Math.max(60, Math.min(300, parseInt(wpm.value || '145', 10)));
+  wpm.value = String(value);
+  localStorage.setItem('teleprompterWpm', String(value));
+  const totalWords = parseInt(localStorage.getItem('teleprompterStatWords') || '0', 10);
+  const totalSeconds = Math.max(1, Math.round((totalWords / value) * 60));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const text = minutes <= 0 ? seconds + 's' : minutes + 'm ' + String(seconds).padStart(2, '0') + 's';
+  localStorage.setItem('teleprompterStatTime', text);
+  const statTime = document.getElementById('statTime');
+  if (statTime) statTime.textContent = text;
+}
+function resetApplicationSettings() {
+  if (!confirm('This will delete the saved script, font size and reading speed.\n\nContinue?')) return;
+  localStorage.removeItem('teleprompterScriptText');
+  localStorage.removeItem('teleprompterFontPx');
+  localStorage.removeItem('teleprompterWpm');
+  localStorage.removeItem('teleprompterMirror');
+  localStorage.removeItem('teleprompterFlip');
+  localStorage.removeItem('teleprompterEyeContact');
+  localStorage.removeItem('teleprompterEyeContactGapSteps');
+  localStorage.removeItem('teleprompterStatWords');
+  localStorage.removeItem('teleprompterStatSentences');
+  localStorage.removeItem('teleprompterStatOptional');
+  localStorage.removeItem('teleprompterStatTime');
+  location.href = 'index.html';
+}
+document.getElementById('closeHelpBtn')?.addEventListener('click', closeHelp);
+document.getElementById('closeHelpBottomBtn')?.addEventListener('click', closeHelp);
+document.getElementById('wpmInput')?.addEventListener('change', updateHelpWpm);
+document.getElementById('resetAppBtn')?.addEventListener('click', resetApplicationSettings);
+loadHelpStats();
+</script>
+</body>
+</html>

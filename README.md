@@ -1,10 +1,18 @@
 # Voice Teleprompter
 
-Voice Teleprompter is a browser-based teleprompter that follows your speech instead of scrolling at a fixed speed.
+Voice Teleprompter is a lightweight browser-based teleprompter that follows your speech instead of scrolling at a fixed speed.
 
-Unlike traditional teleprompters, it waits for you to speak before advancing through the script, allowing you to pause naturally while recording videos, demonstrating products, or presenting technical content.
+Simply keep the application files together and open `index.html` in Google Chrome. No installation, server or subscription is required.
 
-The entire application is contained in a single HTML file and runs locally in a modern browser. No installation, server or subscription is required.
+![Voice Teleprompter](images/screenshot.png)
+
+## Why Voice Teleprompter?
+
+Unlike timer-based teleprompters, Voice Teleprompter waits for you.
+
+You can pause naturally, demonstrate hardware, think about your next point, or restart a take without losing your place.
+
+Instead of relying on perfect speech-to-text transcription, Voice Teleprompter tracks your position using a lightweight required/optional word recognition system designed specifically for technical presentations.
 
 ## Features
 
@@ -24,36 +32,41 @@ Words are divided into two categories:
 - **Required words** (white)
 - **Optional words** (cyan)
 
-This makes the teleprompter much more tolerant of technical terminology, acronyms, product names and common filler words.
+This makes the teleprompter much more tolerant of speech recognition errors, particularly when reading technical terminology, acronyms, product names and common filler words.
 
 ## Eye Contact Mode
 
-Eye Contact Mode creates an adjustable horizontal reading gap so the next lines of text appear immediately above your webcam if positioned in front of your screen within the reading gap.
+Eye Contact Mode creates an adjustable horizontal reading gap for a webcam positioned in front of your display.
+
+The script automatically scrolls so the next lines to be read appear immediately above the webcam, helping you maintain much more natural eye contact while recording.
 
 This helps maintain natural eye contact while reading the script, making recordings look much more natural.
 
 The gap size can be adjusted using the **G−** and **G+** buttons and is remembered automatically.
 
-## Mirror Mode
+## Mirror and Flip Modes
 
-Mirror the script for use with beam-splitter teleprompter hardware.
+Voice Teleprompter supports two display transformations.
 
-Only the script is mirrored. The toolbar, editor and help pages remain readable.
+- **Mirror** reflects the script horizontally for use with beam-splitter teleprompter hardware.
+- **Flip** rotates the script for displays mounted upside down.
+
+The two modes can be used independently or together.
 
 ## Built-in Script Editor
 
 - Edit scripts directly in the browser
 - Open plain text (`.txt`) files
-- Save edited scripts
+- Download edited scripts
 - Automatically remembers the last script used
 
 ## Adjustable Display
 
 - Adjustable font size
-- Fullscreen mode
+- Mirror mode for beam-splitter teleprompters
+- Flip mode for inverted displays
+- Adjustable Eye Contact gap
 - Auto-hiding toolbar
-- Mirror mode
-- Eye Contact mode with adjustable gap
 
 ## Help System
 
@@ -66,6 +79,8 @@ The built-in Help page includes:
 - Script statistics
 - Adjustable reading speed
 - Tips for improving recognition
+- Chrome microphone setup instructions
+- Eye Contact gap guide
 
 ## Script Statistics
 
@@ -80,7 +95,7 @@ Reading time is calculated using an adjustable Words Per Minute (WPM) value.
 
 ## Recognition Tips
 
-If a word is difficult for speech recognition, it can easily be made optional.
+If a word is difficult for speech recognition, it can easily be made optional by using CamelCase or all CAPITALS.
 
 | Required | Optional |
 |----------|----------|
@@ -90,6 +105,8 @@ If a word is difficult for speech recognition, it can easily be made optional.
 
 Optional words are highlighted in **cyan**.
 
+Optional words remain visible in the script but may be skipped by the recognition engine if the following required word is successfully recognised.
+
 ## Browser Support
 
 Voice Teleprompter uses the browser's Web Speech API.
@@ -98,13 +115,17 @@ Recommended browser:
 
 - Google Chrome
 
-Support in other browsers depends on their implementation of the Web Speech API.
+Voice Teleprompter has been developed and tested primarily with Google Chrome, which currently provides the most reliable speech recognition experience.
+
+The built-in Help page includes instructions for selecting the correct microphone if Chrome is using the wrong input device.
 
 ## Privacy
 
 Everything runs locally in your browser.
 
 No scripts are uploaded anywhere.
+
+All recognition is performed using your web browser's speech recognition service.
 
 The application stores only the following in browser local storage:
 
@@ -118,7 +139,15 @@ The application stores only the following in browser local storage:
 
 No installation is required.
 
-Clone or download the repository and open **index.html** in Google Chrome.
+Clone or download the repository, keeping all files together:
+
+- `index.html`
+- `help.html`
+- `styles.css`
+- `app.js`
+- `version.js`
+
+Then open **index.html** in Google Chrome.
 
 ## License
 
